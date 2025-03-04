@@ -46,9 +46,9 @@ SELECT timeline_id FROM pg_control_checkpoint();
 ```
 Systemctl stop postgresql
 ```
-- Run pg_rewind 
+- Run pg_rewind  on the old primary (target).
 ```
-pg_rewind -- targe-pgdata=/var/lib/pgsql/16/data
+pg_rewind -- target-pgdata=/var/lib/pgsql/16/data
 --source-server="host=enter_ip, port= enter_port, user=postgres, password=enter_password"
 ```
 - Create standby.signal file on (old Primary (target)).
@@ -64,7 +64,7 @@ primary_conninfo = 'host= ip, port=port, user=username, password=password'
 
 - Start the old primary as standby
 ```
-systemctl startpostgresql
+systemctl start postgresql
 ```
 
 

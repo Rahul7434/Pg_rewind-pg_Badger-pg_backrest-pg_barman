@@ -21,6 +21,7 @@ pg_rewind is a Postgresql utility used to bring back old primary as standby afte
 - Must have WAL archiving on both servers & Streaming Replication Enabled.
 - need super user access
 - The old Primary (target) server must be shut down propely before running pg_rewind.
+- wal_log_hints = on --(This parameter needs to be on on the new primary server to identify the changes between two server.)
 ```
 #### Configuration Steps
 - Change postgresql.conf file on Standby (New Primary):

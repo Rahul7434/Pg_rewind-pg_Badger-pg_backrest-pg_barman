@@ -1,6 +1,5 @@
 # Pg_rewind | repmgr | pg_Badger | pg_backrest | pg_barman
 
-
 # Pg_rewind
 ```
 pg_rewind is a Postgresql utility used to bring back old primary as standby after failvour without full base backup.
@@ -67,6 +66,89 @@ primary_conninfo = 'host= ip, port=port, user=username, password=password'
 systemctl start postgresql
 ```
 
+# repmgr
+```
+🛠️ Prerequisites (Before Configuration)
+Make sure the following are in place on both master and standby servers:
+PostgreSQL installed (same version across nodes)
+repmgr installed (matching PostgreSQL version)
+Network access between nodes (default PostgreSQL port: 5432)
+SSH access between nodes (for repmgr to execute remote commands)
+Time synchronization (e.g., via NTP)
+
+⚙️ PostgreSQL Configuration
+Update postgresql.conf on all nodes:
+wal_level = 'replica'
+max_wal_senders = 10
+max_replication_slots = 10
+hot_standby = on
+archive_mode = on
+archive_command = '/bin/true'
+shared_preload_libraries = 'repmgr'
+
+Update pg_hba.conf to allow replication and repmgr connections:
+# Replication access
+host    replication     repmgr     192.168.1.0/24     trust
+
+# repmgr access
+host    repmgr          repmgr     192.168.1.0/24     trust
+
+🧑‍💻 User and Database Setup
+Create a dedicated user and database for repmgr:
+
+CREATE USER repmgr SUPERUSER;
+CREATE DATABASE repmgr OWNER repmgr;
+
+📁 repmgr.conf Configuration
+Each node needs a repmgr.conf file. Key parameters include:
+
+Parameter               Description
+--------------------    ---------------------------------------------------------------
+node_id                 Unique ID for each node
+node_name               Descriptive name of the node
+conninfo                Connection string to PostgreSQL (host=... user=repmgr dbname=repmgr)
+data_directory          Path to PostgreSQL data directory
+pg_bindir               Path to PostgreSQL binaries (e.g., /usr/pgsql-13/bin)
+log_file                Path to repmgr log file
+failover                automatic or manual
+promote_command         Command to promote standby to primary
+follow_command          Command to follow new primary after failover
+reconnect_attempts      Number of attempts to reconnect during failover
+reconnect_interval      Interval between reconnect attempts
+monitoring_history      Number of monitoring records to keep
+priority                Priority for failover (lower number = higher priority)
+
+Example:
+node_id=1
+node_name=node1
+conninfo='host=192.168.1.10 user=repmgr dbname=repmgr'
+data_directory='/var/lib/pgsql/13/data'
+pg_bindir='/usr/pgsql-13/bin'
+log_file='/var/log/repmgr/repmgr.log'
+failover=automatic
+promote_command='/usr/pgsql-13/bin/repmgr standby promote -f /etc/repmgr.conf'
+follow_command='/usr/pgsql-13/bin/repmgr standby follow -f /etc/repmgr.conf'
+priority=100
+
+
+🚀 Setup Steps
+On Primary Node:
+1.Register the primary:
+repmgr primary register
+
+On Standby Node:
+2.Clone the standby:
+repmgr standby clone --force --verbose
+
+3.Register the standby:
+repmgr standby register
+
+🔄 Post-Setup: Enable Daemon
+Start the repmgr daemon (repmgrd) on all nodes:
+
+repmgrd -f /etc/repmgr.conf --daemonize
+
+```
 
 
 

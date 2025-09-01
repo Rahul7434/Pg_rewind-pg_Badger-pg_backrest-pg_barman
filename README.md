@@ -208,6 +208,15 @@ Start the repmgr daemon (repmgrd) on all nodes:
 repmgrd -f /etc/repmgr.conf --daemonize
 
 ```
+# pg_backrest
+
+```
+pgBackRest is a reliable backup and restore tool for PostgreSQL.
+The guide is sequential: each section builds on the previous one (e.g., Restore depends on Quick Start).
+It’s designed for Debian/Ubuntu + PostgreSQL 16, but adaptable to other Unix systems.
+Commands are tested on virtual machines, so examples are verified and trustworthy.
+You should run commands as a non-root user with sudo access to both root and postgres.
+```
 
 
 

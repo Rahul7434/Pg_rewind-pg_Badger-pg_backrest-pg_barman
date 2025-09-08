@@ -2,6 +2,7 @@
 
 # Pg_rewind
 ```
+```
 pg_rewind is a Postgresql utility used to bring back old primary as standby after failvour without full base backup.
 
 - Compares the timeline history between the target server (old primary) and the source server (current primary).
@@ -64,6 +65,7 @@ primary_conninfo = 'host= ip, port=port, user=username, password=password'
 - Start the old primary as standby
 ```
 systemctl start postgresql
+```
 ```
 
 # repmgr

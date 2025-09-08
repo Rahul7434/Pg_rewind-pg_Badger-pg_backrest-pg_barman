@@ -349,6 +349,13 @@ pgbadger /var/lib/pgsql/pg_log/*.log -o /tmp/pgbadger_report.html
 ---
 
 ## 🧠 2. pg_gather — SQL-Based Health Snapshot Tool
+```
+"pg_gather is a SQL-only toolkit designed to perform health inspections of a PostgreSQL database. It’s especially useful in secure environments because it doesn’t require any external binaries or installations — it runs entirely through psql. The tool consists of two main scripts: gather.sql, which collects system and performance data, and gather_report.sql, which analyzes that data and generates a report.
+
+I’ve used pg_gather to audit database health by identifying table bloat, unused indexes, autovacuum behavior, replication lag, and configuration mismatches. It outputs data in TSV format, which is easy to review, mask, and share.
+
+What I like about pg_gather is its portability — it works across cloud platforms like AWS RDS, Azure, and even containerized environments. It’s ideal for proactive monitoring and periodic audits, especially when you want full transparency and minimal overhead."
+```
 
 ### 🔧 Installation Steps
 

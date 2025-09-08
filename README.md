@@ -217,6 +217,130 @@ It’s designed for Debian/Ubuntu + PostgreSQL 16, but adaptable to other Unix s
 Commands are tested on virtual machines, so examples are verified and trustworthy.
 You should run commands as a non-root user with sudo access to both root and postgres.
 ```
+---
+# 🛠️ PostgreSQL Diagnostic Toolkit: pgBadger & pg_gather
 
+This guide explains how to set up and use **pgBadger** and **pg_gather** for PostgreSQL performance monitoring and health auditing.
+
+---
+
+## 📦 1. pgBadger — PostgreSQL Log Analyzer
+
+### 🔧 Installation Steps
+
+#### ✅ Prerequisites
+- PostgreSQL must be configured to log queries.
+- Perl must be installed (pgBadger is written in Perl).
+
+#### 🖥️ Install pgBadger (Linux)
+```bash
+sudo apt install pgbadger   # Debian/Ubuntu
+sudo yum install pgbadger   # RHEL/CentOS
+```
+
+#### 🧰 Configure PostgreSQL Logging
+Edit `postgresql.conf`:
+```conf
+logging_collector = on
+log_directory = 'pg_log'
+log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'
+log_statement = 'mod'       # or 'all' for full query logging
+log_line_prefix = '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
+log_duration = on
+```
+
+Restart PostgreSQL:
+```bash
+sudo systemctl restart postgresql
+```
+
+---
+
+### 📊 Generate Report
+```bash
+pgbadger /var/lib/pgsql/pg_log/*.log -o /tmp/pgbadger_report.html
+```
+
+#### 🔍 Optional Flags
+```bash
+-j 4                 # Use 4 CPU cores for parallel parsing
+-f stderr            # Specify log format
+-b "2025-09-01"      # Start date
+-e "2025-09-07"      # End date
+```
+
+---
+
+### 🔄 Backend Workflow
+
+1. PostgreSQL writes logs to `pg_log/` based on your config.
+2. pgBadger parses these logs line by line.
+3. It extracts:
+   - Query durations
+   - Errors and warnings
+   - Checkpoint and vacuum activity
+   - Connection stats
+4. It builds an HTML report with graphs and summaries.
+
+📌 **No direct DB access** — it works entirely from log files.
+
+---
+
+## 🧠 2. pg_gather — SQL-Based Health Snapshot Tool
+
+### 🔧 Installation Steps
+
+#### ✅ Prerequisites
+- No installation needed — just download the SQL scripts.
+- Requires access to `psql` and a PostgreSQL user with read privileges.
+
+#### 📥 Download Scripts
+From the official repo or trusted source:
+- `gather.sql`
+- `gather_report.sql`
+- `history_schema.sql` (optional for storing snapshots)
+
+---
+
+### 📊 Run Data Collection
+```bash
+psql -U postgres -d mydb -f gather.sql > /tmp/db_snapshot.tsv
+```
+
+### 📊 Generate Report
+Import snapshot into analysis DB:
+```bash
+psql -U postgres -d analysis_db -f history_schema.sql
+\copy gather_data FROM '/tmp/db_snapshot.tsv' WITH CSV
+psql -U postgres -d analysis_db -f gather_report.sql
+```
+
+---
+
+### 🔄 Backend Workflow
+
+1. `gather.sql` runs SQL queries against system catalogs:
+   - `pg_stat_user_tables`, `pg_stat_statements`, `pg_class`, `pg_index`
+2. It collects:
+   - Table bloat
+   - Index usage
+   - Autovacuum stats
+   - Configuration parameters
+   - Replication lag
+3. Output is saved as TSV for portability.
+4. `gather_report.sql` analyzes the snapshot and generates insights.
+
+📌 **No external dependencies** — works entirely via SQL.
+---
+## 🧪 Combined Workflow Example
+
+| Task                        | Tool        | Command / Action                                      |
+|-----------------------------|-------------|--------------------------------------------------------|
+| Weekly health audit         | pg_gather   | `psql -f gather.sql > snapshot.tsv`                   |
+| Analyze unused indexes      | pg_gather   | `gather_report.sql`                                   |
+| Daily query performance     | pgBadger    | `pgbadger *.log -o report.html`                       |
+| Troubleshoot slow queries   | pgBadger    | Filter by duration, error, or connection spikes       |
+| Monitor autovacuum behavior | pg_gather   | Check `pg_stat_user_tables` and vacuum thresholds     |
+---
 
 

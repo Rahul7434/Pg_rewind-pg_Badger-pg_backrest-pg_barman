@@ -227,8 +227,60 @@ It parses PostgreSQL logs and produces HTML reports with graphs and summaries.
 It helps us to identify slow queries, monitor activity, and troubleshoot issues,monitor connection spikes, and audit system behavior
 It does not require direct access to DB, it works entirely from log files.
 ```
+```
+## 🔍 What pgBadger Can Reveal
 
-This guide explains how to set up and use **pgBadger** and **pg_gather** for PostgreSQL performance monitoring and health auditing.
+### 🐢 Slow Queries
+- Shows queries that exceed a certain duration threshold.
+- Highlights execution time, frequency, and source (user, database, client IP).
+- Helps you pinpoint performance bottlenecks.
+
+### 🔁 Repeated Queries
+- Aggregates identical queries and shows how many times each was run.
+- Useful for identifying inefficient query patterns or missing caching.
+
+### 🔢 Total Query Count
+- Displays total number of queries executed per hour/day.
+- Breaks down by database, user, and application.
+
+### 🔒 Blocked Queries / Lock Waits
+- Detects queries that were blocked due to locks.
+- Shows wait duration, affected tables, and conflicting sessions.
+- Requires `log_lock_waits = on` in `postgresql.conf`.
+
+### 🧹 Autovacuum Activity
+- Logs when autovacuum runs and on which tables.
+- Shows duration and effectiveness.
+- Requires `log_autovacuum_min_duration` to be set (e.g., `0` to log all).
+
+### 🧱 Checkpoint Events
+- Reports how often checkpoints occurred.
+- Shows write and sync times, WAL file sizes.
+- Requires `log_checkpoints = on`.
+
+### 🔌 Connection Stats
+- Tracks connections and disconnections.
+- Shows spikes in session counts, client IPs, and failed login attempts.
+- Requires `log_connections = on` and `log_disconnections = on`.
+
+### ⚠️ Errors & Warnings
+- Captures syntax errors, permission issues, deadlocks, and failed queries.
+- Helps with debugging and auditing.
+
+### 📊 Performance Graphs
+HTML report includes:
+- Query duration histogram
+- Connections over time
+- Checkpoint frequency
+- Lock wait distribution
+
+### 🧠 Bonus Insights (If Logging Is Enabled)
+- Temporary file usage (indicates memory pressure)
+- Statement types breakdown (SELECT, INSERT, UPDATE, etc.)
+- Top 10 slowest queries
+- Top 10 most frequent queries
+- Application-level stats (if `application_name` is set)
+```
 
 ---
 

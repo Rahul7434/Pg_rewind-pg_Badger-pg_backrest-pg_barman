@@ -1,4 +1,4 @@
-# Pg_rewind | repmgr | pg_Badger | pg_backrest | pg_barman
+# Pg_rewind | repmgr | pg_Badger | pg_backrest | pg_barman | pg_gather
 
 # Pg_rewind
 ```

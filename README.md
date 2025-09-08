@@ -1,6 +1,6 @@
 # Pg_rewind | repmgr | pg_Badger | pg_backrest | pg_barman | pg_gather
 
-# Pg_rewind
+# 1.Pg_rewind
 ```
 ```
 pg_rewind is a Postgresql utility used to bring back old primary as standby after failvour without full base backup.
@@ -68,7 +68,7 @@ systemctl start postgresql
 ```
 ```
 
-# repmgr
+# 2.repmgr
 ```
 repmgr (Replication Manager) is a powerful open-source tool suite designed to manage replication and failover in PostgreSQL clusters.
 It’s especially useful in high-availability (HA) environments where you want to ensure your database remains accessible even if one server goes down.
@@ -210,7 +210,7 @@ Start the repmgr daemon (repmgrd) on all nodes:
 repmgrd -f /etc/repmgr.conf --daemonize
 
 ```
-# pg_backrest
+# 3.pg_backrest
 
 ```
 pgBackRest is a reliable backup and restore tool for PostgreSQL.
@@ -221,7 +221,7 @@ You should run commands as a non-root user with sudo access to both root and pos
 ```
 ---
 ---
-# 🛠️ PostgreSQL Diagnostic Toolkit: pgBadger & pg_gather
+# 4.🛠️ PostgreSQL Diagnostic Toolkit: pgBadger & pg_gather
 ```
 pgBadger is a PostgreSQL log analyzer that reads database logs and generates detailed, visual reports about performance, errors, query behavior, and more.
 It’s written in Perl, a powerful scripting language known for text processing.

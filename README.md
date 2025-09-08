@@ -67,6 +67,9 @@ primary_conninfo = 'host= ip, port=port, user=username, password=password'
 systemctl start postgresql
 ```
 ```
+---
+---
+---
 
 # 2.repmgr
 ```
@@ -210,6 +213,10 @@ Start the repmgr daemon (repmgrd) on all nodes:
 repmgrd -f /etc/repmgr.conf --daemonize
 
 ```
+---
+---
+---
+
 # 3.pg_backrest
 
 ```
@@ -284,8 +291,6 @@ HTML report includes:
 - Application-level stats (if `application_name` is set)
 ```
 
----
-
 ## 📦 1. pgBadger — PostgreSQL Log Analyzer
 
 ### 🔧 Installation Steps
@@ -316,8 +321,6 @@ Restart PostgreSQL:
 sudo systemctl restart postgresql
 ```
 
----
-
 ### 📊 Generate Report
 ```bash
 pgbadger /var/lib/pgsql/pg_log/*.log -o /tmp/pgbadger_report.html
@@ -330,9 +333,6 @@ pgbadger /var/lib/pgsql/pg_log/*.log -o /tmp/pgbadger_report.html
 -b "2025-09-01"      # Start date
 -e "2025-09-07"      # End date
 ```
-
----
-
 ### 🔄 Backend Workflow
 
 1. PostgreSQL writes logs to `pg_log/` based on your config.
@@ -345,9 +345,8 @@ pgbadger /var/lib/pgsql/pg_log/*.log -o /tmp/pgbadger_report.html
 4. It builds an HTML report with graphs and summaries.
 
 📌 **No direct DB access** — it works entirely from log files.
-
 ---
-
+---
 ## 🧠 2. pg_gather — SQL-Based Health Snapshot Tool
 ```
 "pg_gather is a SQL-only toolkit designed to perform health inspections of a PostgreSQL database. It’s especially useful in secure environments because it doesn’t require any external binaries or installations — it runs entirely through psql. The tool consists of two main scripts: gather.sql, which collects system and performance data, and gather_report.sql, which analyzes that data and generates a report.
@@ -369,8 +368,6 @@ From the official repo or trusted source:
 - `gather_report.sql`
 - `history_schema.sql` (optional for storing snapshots)
 
----
-
 ### 📊 Run Data Collection
 ```bash
 psql -U postgres -d mydb -f gather.sql > /tmp/db_snapshot.tsv
@@ -383,8 +380,6 @@ psql -U postgres -d analysis_db -f history_schema.sql
 \copy gather_data FROM '/tmp/db_snapshot.tsv' WITH CSV
 psql -U postgres -d analysis_db -f gather_report.sql
 ```
-
----
 
 ### 🔄 Backend Workflow
 
@@ -400,7 +395,6 @@ psql -U postgres -d analysis_db -f gather_report.sql
 4. `gather_report.sql` analyzes the snapshot and generates insights.
 
 📌 **No external dependencies** — works entirely via SQL.
----
 ## 🧪 Combined Workflow Example
 
 | Task                        | Tool        | Command / Action                                      |
@@ -411,5 +405,5 @@ psql -U postgres -d analysis_db -f gather_report.sql
 | Troubleshoot slow queries   | pgBadger    | Filter by duration, error, or connection spikes       |
 | Monitor autovacuum behavior | pg_gather   | Check `pg_stat_user_tables` and vacuum thresholds     |
 ---
-
+---
 

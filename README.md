@@ -218,7 +218,15 @@ Commands are tested on virtual machines, so examples are verified and trustworth
 You should run commands as a non-root user with sudo access to both root and postgres.
 ```
 ---
+---
 # 🛠️ PostgreSQL Diagnostic Toolkit: pgBadger & pg_gather
+```
+pgBadger is a PostgreSQL log analyzer that reads database logs and generates detailed, visual reports about performance, errors, query behavior, and more.
+It’s written in Perl, a powerful scripting language known for text processing.
+It parses PostgreSQL logs and produces HTML reports with graphs and summaries.
+It helps us to identify slow queries, monitor activity, and troubleshoot issues,monitor connection spikes, and audit system behavior
+It does not require direct access to DB, it works entirely from log files.
+```
 
 This guide explains how to set up and use **pgBadger** and **pg_gather** for PostgreSQL performance monitoring and health auditing.
 
